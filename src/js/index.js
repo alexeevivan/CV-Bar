@@ -13,11 +13,11 @@ window.addEventListener("load", () => {
 				start: "top top",
 				end: "+=150%",
 				pin: true,
-				pinSpacing: true,
 				scrub: true,
 				markers: true,
+				pinType: "transform", // 💥 это ключ к мобильной стабильности
+				scroller: "body", // если без кастомного скролла
 				invalidateOnRefresh: true,
-				pinType: "transform"
 			}
 		})
 		.to(".slogan", {
@@ -38,7 +38,7 @@ window.addEventListener("load", () => {
 				ease: "power1.inOut",
 			},
 			"<"
-		)
+		);
 });
 
 
