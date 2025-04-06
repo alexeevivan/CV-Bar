@@ -16,7 +16,8 @@ window.addEventListener("load", () => {
 				pinSpacing: true,
 				scrub: true,
 				markers: true,
-				invalidateOnRefresh: true
+				invalidateOnRefresh: true,
+				pinType: "transform"
 			}
 		})
 		.to(".slogan", {
@@ -36,6 +37,12 @@ window.addEventListener("load", () => {
 				transformOrigin: "center center",
 				ease: "power1.inOut",
 			},
+			"<"
+		)
+		.fromTo(
+			".section.info",
+			{ opacity: 0 },
+			{ opacity: 1, ease: "power1.inOut" },
 			"<"
 		);
 });

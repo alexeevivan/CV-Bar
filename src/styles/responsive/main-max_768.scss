@@ -17,6 +17,8 @@
 					.image-container {
 						display: flex;
 						justify-content: center;
+						z-index: 0;
+						position: relative;
 
 						.slogan {
 							width: 80%;
@@ -36,6 +38,8 @@
 
 						&.info {
 							min-height: 100vh;
+							position: relative;
+							z-index: 1;
 
 							.cloneable {
 								.tab-layout {
