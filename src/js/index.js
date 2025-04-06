@@ -39,12 +39,6 @@ window.addEventListener("load", () => {
 			},
 			"<"
 		)
-		.fromTo(
-			".section.info",
-			{ opacity: 0 },
-			{ opacity: 1, ease: "power1.inOut" },
-			"<"
-		);
 });
 
 
