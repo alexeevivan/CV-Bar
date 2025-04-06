@@ -14,8 +14,7 @@ window.addEventListener("load", () => {
 				end: "+=150%",
 				pin: true,
 				scrub: true,
-				markers: true,
-				pinType: "transform", // 💥 это ключ к мобильной стабильности
+				markers: true
 			}
 		})
 		.to(".slogan", {
@@ -38,19 +37,6 @@ window.addEventListener("load", () => {
 			"<"
 		);
 });
-
-if (window.innerWidth >= 768) {
-	gsap.to(".section.second", {
-		scrollTrigger: {
-			trigger: ".section.second",
-			start: "top top",
-			end: "bottom top",
-			scrub: true,
-			pin: true,
-		},
-		opacity: 0,
-	});
-}
 
 
 
