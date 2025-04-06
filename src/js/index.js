@@ -13,8 +13,10 @@ window.addEventListener("load", () => {
 				start: "top top",
 				end: "+=150%",
 				pin: true,
+				pinSpacing: true,
 				scrub: true,
-				markers: true
+				markers: true,
+				invalidateOnRefresh: true
 			}
 		})
 		.to(".slogan", {
