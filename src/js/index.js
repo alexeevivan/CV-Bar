@@ -6,39 +6,72 @@ import MotionPathPlugin from "./_vendors/MotionPathPlugin.min.js";
 gsap.registerPlugin(ScrollTrigger, ScrollSmoother, MotionPathPlugin);
 
 window.addEventListener("load", () => {
-	gsap
-		.timeline({
-			scrollTrigger: {
-				trigger: ".wrapper",
-				start: "top top",
-				end: "+=150%",
-				pin: true,
-				scrub: true,
-				markers: true,
-				pinType: "transform", // 💥 это ключ к мобильной стабильности
-				scroller: "body", // если без кастомного скролла
-				invalidateOnRefresh: true,
-			}
-		})
-		.to(".slogan", {
-			opacity: 0,
-		})
-		.to(".mainimage", {
-			scale: 2,
-			z: 550,
-			transformOrigin: "center center",
-			ease: "power1.inOut"
-		})
-		.to(
-			".section.second",
-			{
+	const isMobile = window.innerWidth < 768;  // Условие для мобильных устройств
+
+	if (!isMobile) {
+		// Только для десктопов
+		gsap
+			.timeline({
+				scrollTrigger: {
+					trigger: ".wrapper",
+					start: "top top",
+					end: "+=150%",
+					pin: true,  // Фиксация для десктопа
+					scrub: true,
+					markers: true,
+					pinType: "transform", // 💥 это ключ к мобильной стабильности
+				},
+			})
+			.to(".slogan", {
 				opacity: 0,
-				scale: 1,
+			})
+			.to(".mainimage", {
+				scale: 2,
+				z: 550,
 				transformOrigin: "center center",
 				ease: "power1.inOut",
-			},
-			"<"
-		);
+			})
+			.to(
+				".section.second",
+				{
+					opacity: 0,
+					scale: 1,
+					transformOrigin: "center center",
+					ease: "power1.inOut",
+				},
+				"<"
+			);
+	} else {
+		// Для мобильных экранов просто анимация без pin
+		gsap
+			.timeline({
+				scrollTrigger: {
+					trigger: ".wrapper",
+					start: "top top",
+					end: "+=150%",
+					scrub: true,
+					markers: true,
+					pinType: "transform",
+				},
+			})
+			.to(".slogan", {
+				opacity: 0,
+			})
+			.to(".mainimage", {
+				scale: 1.2,  // Меньший скейл для мобильных
+				ease: "power1.inOut",
+			})
+			.to(
+				".section.second",
+				{
+					opacity: 1, // Убираем исчезновение
+					scale: 1,
+					transformOrigin: "center center",
+					ease: "power1.inOut",
+				},
+				"<"
+			);
+	}
 });
 
 
