@@ -1,4 +1,5 @@
 import '../styles/styles.scss';
+import '../styles/responsive/main-max_768.scss';
 import gsap from "./_vendors/gsap.min.js";
 import ScrollTrigger from "./_vendors/ScrollTrigger.min.js";
 import ScrollSmoother from "./_vendors/ScrollSmoother.min.js";

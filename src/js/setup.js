@@ -1,4 +1,5 @@
 import '../styles/styles-setup.scss';
+import '../styles/responsive/training-max_768.scss';
 
 // portfolio
 $('.gallery ul li a').click(function () {

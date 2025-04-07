@@ -1,5 +1,4 @@
 @use "fonts";
-@use "./responsive/main-max_768.scss";
 @use "null";
 
 
@@ -14,12 +13,7 @@ body {
 	font-family: "SF Pro Display";
 	color: var(--color-text);
 	background-color: #000000;
-
-	::-webkit-scrollbar {
-		width: 10px;
-		background: red;
-		display: none;
-	}
+	overflow-x: hidden;
 
 	.wrapper,
 	.content {
@@ -374,5 +368,9 @@ body {
 				}
 			}
 		}
+	}
+
+	.links.mobile {
+		display: none;
 	}
 }
