@@ -1,0 +1,39 @@
+{
+	"name": "cv",
+	"version": "1.0.0",
+	"main": "index.js",
+	"scripts": {
+		"test": "echo \"Error: no test specified\" && exit 1",
+		"start": "webpack serve --mode development",
+		"build": "webpack --mode production",
+		"predeploy": "npm run build",
+		"deploy": "gh-pages -d dist"
+	},
+	"keywords": [],
+	"author": "",
+	"license": "ISC",
+	"description": "",
+	"devDependencies": {
+		"css-loader": "^7.1.2",
+		"ejs-loader": "^0.5.0",
+		"file-loader": "^6.2.0",
+		"gh-pages": "^6.3.0",
+		"html-loader": "^5.1.0",
+		"html-webpack-plugin": "^5.6.3",
+		"sass": "^1.86.0",
+		"sass-loader": "^16.0.5",
+		"style-loader": "^4.0.0",
+		"webpack": "^5.99.7",
+		"webpack-cli": "^6.0.1",
+		"webpack-dev-server": "^5.2.1"
+	},
+	"dependencies": {
+		"clean-webpack-plugin": "^4.0.0",
+		"copy-webpack-plugin": "^13.0.0",
+		"gsap": "^3.12.7",
+		"nanogallery2": "^3.0.5",
+		"smooth-scrollbar": "^8.8.4",
+		"webapack": "^1.0.0"
+	},
+	"homepage": "https://alexeevivan.github.io/cv-bar"
+}
