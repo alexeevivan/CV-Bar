@@ -23,7 +23,7 @@
 		"sass": "^1.86.0",
 		"sass-loader": "^16.0.5",
 		"style-loader": "^4.0.0",
-		"webpack": "^5.98.0",
+		"webpack": "^5.99.7",
 		"webpack-cli": "^6.0.1",
 		"webpack-dev-server": "^5.2.1"
 	},
@@ -32,7 +32,8 @@
 		"copy-webpack-plugin": "^13.0.0",
 		"gsap": "^3.12.7",
 		"nanogallery2": "^3.0.5",
-		"smooth-scrollbar": "^8.8.4"
+		"smooth-scrollbar": "^8.8.4",
+		"webapack": "^1.0.0"
 	},
 	"homepage": "https://alexeevivan.github.io/cv-bar"
 }
