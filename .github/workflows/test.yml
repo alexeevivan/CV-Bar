@@ -14,5 +14,12 @@ jobs:
           node-version: 22
           cache: npm
       - run: npm ci
+      - name: Restore WebP conversion cache
+        uses: actions/cache@v4
+        with:
+          path: .cache/webp-v1
+          key: webp-v1-${{ runner.os }}-${{ hashFiles('src/assets/content/**/*.jpg', 'src/assets/content/**/*.jpeg', 'src/assets/content/**/*.png') }}
+          restore-keys: |
+            webp-v1-${{ runner.os }}-
       - run: npm test
       - run: npm run build

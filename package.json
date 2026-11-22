@@ -6,7 +6,8 @@
 		"test": "vitest run",
 		"test:watch": "vitest",
 		"start": "webpack serve --mode development",
-		"build": "webpack --mode production",
+		"build": "webpack --mode production && node scripts/build-webp.mjs",
+		"build:webp": "node scripts/build-webp.mjs",
 		"predeploy": "npm run build",
 		"deploy": "gh-pages -d dist"
 	},
@@ -24,6 +25,7 @@
 		"jsdom": "^31.0.1",
 		"sass": "^1.86.0",
 		"sass-loader": "^16.0.5",
+		"sharp": "^0.35.5",
 		"style-loader": "^4.0.0",
 		"vitest": "^5.1.1",
 		"webpack": "^5.99.7",
