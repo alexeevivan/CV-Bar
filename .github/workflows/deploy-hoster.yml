@@ -1,0 +1,60 @@
+name: Deploy to hoster.by
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: deploy-hoster-production
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: production
+      url: https://alexeevivan.com
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Test
+        run: npm test
+
+      - name: Build
+        run: npm run build
+
+      - name: Install FTP client
+        run: sudo apt-get update && sudo apt-get install --yes lftp
+
+      - name: Upload dist to hoster.by
+        env:
+          FTP_HOST: 87.232.64.171
+          FTP_USER: github-deploy
+          FTP_PASSWORD: ${{ secrets.HOSTER_FTP_PASSWORD }}
+        run: |
+          test -n "$FTP_PASSWORD"
+          lftp <<EOF
+          set cmd:fail-exit yes
+          set net:max-retries 2
+          set net:timeout 20
+          set ftp:ssl-allow no
+          open --user "$FTP_USER" --password "$FTP_PASSWORD" "ftp://$FTP_HOST"
+          mirror --reverse --verbose --parallel=4 dist/ /
+          bye
+          EOF
