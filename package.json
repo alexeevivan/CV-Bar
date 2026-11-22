@@ -3,11 +3,12 @@
 	"version": "1.0.0",
 	"main": "index.js",
 	"scripts": {
-		"test": "echo \"Error: no test specified\" && exit 1",
+		"test": "vitest run",
+		"test:watch": "vitest",
 		"start": "webpack serve --mode development",
 		"build": "webpack --mode production",
 		"predeploy": "npm run build",
-		"deploy": "npm run build && gh-pages -d dist"
+		"deploy": "gh-pages -d dist"
 	},
 	"keywords": [],
 	"author": "",
@@ -20,9 +21,11 @@
 		"gh-pages": "^6.3.0",
 		"html-loader": "^5.1.0",
 		"html-webpack-plugin": "^5.6.3",
+		"jsdom": "^31.0.1",
 		"sass": "^1.86.0",
 		"sass-loader": "^16.0.5",
 		"style-loader": "^4.0.0",
+		"vitest": "^5.1.1",
 		"webpack": "^5.99.7",
 		"webpack-cli": "^6.0.1",
 		"webpack-dev-server": "^5.2.1"

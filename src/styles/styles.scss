@@ -2,13 +2,6 @@
 @use "null";
 
 
-.gsap-marker-scroller-start,
-.gsap-marker-scroller-end,
-.gsap-marker-end,
-.gsap-marker-start {
-	display: none !important;
-}
-
 body {
 	font-family: "SF Pro Display";
 	color: var(--color-text);
