@@ -49,6 +49,7 @@ jobs:
           FTP_HOST: 87.232.64.171
           FTP_USER: github-deploy
           FTP_PASSWORD: ${{ secrets.HOSTER_FTP_PASSWORD }}
+          EVENT_BEFORE: ${{ github.event.before }}
         run: |
           test -n "$FTP_PASSWORD"
           rm -f "$RUNNER_TEMP/deploy-sha"
@@ -79,7 +80,17 @@ jobs:
               FORCE_CORE_UPLOAD="1"
             fi
           else
-            echo "No verified server deployment marker; scheduling a full deployment."
+            if test -n "$EVENT_BEFORE" && test "$EVENT_BEFORE" != "0000000000000000000000000000000000000000"; then
+              if git cat-file -e "$EVENT_BEFORE^{commit}" 2>/dev/null && git merge-base --is-ancestor "$EVENT_BEFORE" "$GITHUB_SHA"; then
+                echo "No verified server deployment marker; recovering core files from the previous push."
+                DEPLOY_BASE="$EVENT_BEFORE"
+                FORCE_CORE_UPLOAD="1"
+              fi
+            fi
+
+            if test -z "$DEPLOY_BASE"; then
+              echo "No safe deployment base; scheduling a full deployment."
+            fi
           fi
 
           echo "DEPLOY_BASE=$DEPLOY_BASE" >> "$GITHUB_ENV"
