@@ -55,11 +55,17 @@ jobs:
           set net:timeout 20
           set ftp:ssl-allow no
           open --user "$FTP_USER" --password "$FTP_PASSWORD" "ftp://$FTP_HOST"
-          mput -O / dist/*.html
+          put -O / dist/index.html
+          mkdir -p /design
+          mkdir -p /training
+          mkdir -p /bar-setup
+          put -O /design dist/design/index.html
+          put -O /training dist/training/index.html
+          put -O /bar-setup dist/bar-setup/index.html
           mirror --reverse --verbose --parallel=4 dist/ /
           cls -l /index.html
-          cls -l /design.html
-          cls -l /bar-setup.html
-          cls -l /training.html
+          cls -l /design/index.html
+          cls -l /bar-setup/index.html
+          cls -l /training/index.html
           bye
           EOF

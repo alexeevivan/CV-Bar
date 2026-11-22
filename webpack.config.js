@@ -21,6 +21,8 @@ module.exports = {
 		filename: "assets/js/[name].bundle.js",
 		path: path.resolve(__dirname, "dist"),
 		assetModuleFilename: "assets/content/[name][ext]",
+		publicPath: "/",
+		clean: true,
 	},
 	devServer: {
 		static: path.resolve(__dirname, "dist"),
@@ -44,16 +46,16 @@ module.exports = {
 			chunks: ["main"],
 		}),
 		new HtmlWebpackPlugin({
-			filename: "design.html",
+			filename: "design/index.html",
 			template: "./src/design.html",
 			chunks: ["design"],
 		}), new HtmlWebpackPlugin({
-			filename: "training.html",
+			filename: "training/index.html",
 			template: "./src/training.html",
 			chunks: ["training"],
 		}),
 		new HtmlWebpackPlugin({
-			filename: "bar-setup.html",
+			filename: "bar-setup/index.html",
 			template: "./src/bar-setup.html",
 			chunks: ["setup"],
 		})

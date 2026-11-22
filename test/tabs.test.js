@@ -154,3 +154,23 @@ describe("page metadata", () => {
 		expect(source).toMatch(/<html lang="en">/);
 	});
 });
+
+describe("clean page routes", () => {
+	// Value: protects=internal navigation keeps extensionless production URLs; fails_when=a link regresses to a flat .html path; why_new=clean URLs depend on source links matching nested Webpack output; seam=none; no_claim=host-level redirects for legacy URLs
+	it("links the homepage to extensionless section routes", () => {
+		const source = readFileSync(resolve(process.cwd(), "src/html/includes/_wrapper.html"), "utf8");
+
+		expect(source).not.toMatch(/href="[^"]+\.html"/);
+		expect(source).toContain('href="/training/"');
+		expect(source).toContain('href="/bar-setup/"');
+		expect(source).toContain('href="/design/"');
+	});
+
+	// Value: protects=detail pages return to the canonical domain root; fails_when=a header link reintroduces index.html; why_new=each detail template owns its home link independently; seam=none; no_claim=browser history behavior
+	it.each(["_wrapper-training.html", "_wrapper-setup.html", "_wrapper-design.html"])("links %s back to /", (file) => {
+		const source = readFileSync(resolve(process.cwd(), "src/html/includes", file), "utf8");
+
+		expect(source).toContain('href="/"');
+		expect(source).not.toContain('href="index.html"');
+	});
+});
