@@ -15,7 +15,8 @@ window.addEventListener("load", () => {
 				end: "+=150%",
 				pin: true,
 				scrub: true,
-				markers: true
+				markers: true,
+				invalidateOnRefresh: true
 			}
 		})
 		.to(".slogan", {
@@ -39,7 +40,9 @@ window.addEventListener("load", () => {
 		);
 });
 
-
+window.addEventListener("resize", () => {
+	ScrollTrigger.refresh();
+});
 
 gsap.registerPlugin(CustomEase, Flip)
 
@@ -116,8 +119,8 @@ function initTabSystem() {
 		let isAnimating = false;
 
 		function switchTab(index, initial = false) {
-			if (!initial && (isAnimating || buttons[index] === activeButton)) return; // ignore click if the clicked button is already active 
-			isAnimating = true; // keep track of whether or not one is moving, to prevent overlap
+			if (!initial && (isAnimating || buttons[index] === activeButton)) return;
+			isAnimating = true;
 
 			const outgoingContent = activeContent;
 			const incomingContent = contentItems[index];
@@ -128,13 +131,13 @@ function initTabSystem() {
 			let incomingLines = incomingContent.querySelectorAll("[data-tabs-fade]");
 
 			const timeline = gsap.timeline({
-				defaults: {
-					ease: "power3.inOut"
-				},
+				defaults: { ease: "power3.inOut" },
 				onComplete: () => {
 					if (!initial) {
 						outgoingContent && outgoingContent.classList.remove("active");
 						outgoingVisual && outgoingVisual.classList.remove("active");
+						gsap.set(outgoingContent, { opacity: 1 });
+						gsap.set(outgoingContent.querySelectorAll("a"), { autoAlpha: 1 });
 					}
 					activeContent = incomingContent;
 					activeVisual = incomingVisual;
@@ -145,10 +148,19 @@ function initTabSystem() {
 			incomingContent.classList.add("active");
 			incomingVisual.classList.add("active");
 
+			// Анимация исходящего — только при реальном переключении
+			if (!initial) {
+				timeline
+					.to(outgoingContent, { opacity: 0, duration: 0.6 }, 0)
+					.to(outgoingLines, { y: "-2em", autoAlpha: 0, duration: 0.6 }, 0)
+					.to(outgoingContent.querySelectorAll("a"), { autoAlpha: 0, duration: 0.3 }, 0)
+					.to(outgoingVisual, { autoAlpha: 0, xPercent: 3 }, 0);
+			}
+
+			// Анимация входящего — всегда
 			timeline
-				.to(outgoingLines, { y: "-2em", autoAlpha: 0 }, 0)
-				.to(outgoingVisual, { autoAlpha: 0, xPercent: 3 }, 0)
-				.fromTo(incomingLines, { y: "2em", autoAlpha: 0 }, { y: "0em", autoAlpha: 1, stagger: 0.075 }, 0.4)
+				.fromTo(incomingContent, { opacity: 0 }, { opacity: 1, duration: 0.3 }, initial ? 0 : 0.35)
+				.fromTo(incomingLines, { y: "2em", autoAlpha: 0 }, { y: "0em", autoAlpha: 1, stagger: 0.075 }, initial ? 0 : 0.4)
 				.fromTo(incomingVisual, { autoAlpha: 0, xPercent: 3 }, { autoAlpha: 1, xPercent: 0 }, "<");
 
 			activeButton && activeButton.classList.remove("active");
@@ -157,6 +169,8 @@ function initTabSystem() {
 		}
 
 		switchTab(0, true); // on page load
+
+		gsap.set(contentItems[0].querySelectorAll("a"), { autoAlpha: 1 });
 
 		buttons.forEach((button, i) => {
 			button.addEventListener("click", () => switchTab(i));
