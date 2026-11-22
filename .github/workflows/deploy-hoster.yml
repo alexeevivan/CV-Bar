@@ -11,7 +11,7 @@ permissions:
 
 concurrency:
   group: deploy-hoster-production
-  cancel-in-progress: true
+  cancel-in-progress: false
 
 jobs:
   deploy:
@@ -23,6 +23,8 @@ jobs:
     steps:
       - name: Check out repository
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Set up Node.js
         uses: actions/setup-node@v4
@@ -42,27 +44,63 @@ jobs:
       - name: Install FTP client
         run: sudo apt-get update && sudo apt-get install --yes lftp
 
-      - name: Upload dist to hoster.by
+      - name: Read last deployed commit
+        env:
+          FTP_HOST: 87.232.64.171
+          FTP_USER: github-deploy
+          FTP_PASSWORD: ${{ secrets.HOSTER_FTP_PASSWORD }}
+          EVENT_BEFORE: ${{ github.event.before }}
+        run: |
+          test -n "$FTP_PASSWORD"
+          rm -f "$RUNNER_TEMP/deploy-sha"
+          lftp <<EOF || true
+          set cmd:fail-exit yes
+          set net:max-retries 2
+          set net:timeout 20
+          set ftp:ssl-allow no
+          open --user "$FTP_USER" --password "$FTP_PASSWORD" "ftp://$FTP_HOST"
+          get -o "$RUNNER_TEMP/deploy-sha" /.deploy-sha
+          bye
+          EOF
+
+          DEPLOY_BASE=""
+          if test -s "$RUNNER_TEMP/deploy-sha"; then
+            CANDIDATE="$(tr -d '[:space:]' < "$RUNNER_TEMP/deploy-sha")"
+            if git cat-file -e "$CANDIDATE^{commit}" 2>/dev/null && git merge-base --is-ancestor "$CANDIDATE" "$GITHUB_SHA"; then
+              DEPLOY_BASE="$CANDIDATE"
+            fi
+          fi
+
+          if test -z "$DEPLOY_BASE" && test -n "$EVENT_BEFORE" && test "$EVENT_BEFORE" != "0000000000000000000000000000000000000000"; then
+            if git cat-file -e "$EVENT_BEFORE^{commit}" 2>/dev/null && git merge-base --is-ancestor "$EVENT_BEFORE" "$GITHUB_SHA"; then
+              DEPLOY_BASE="$EVENT_BEFORE"
+            fi
+          fi
+
+          echo "DEPLOY_BASE=$DEPLOY_BASE" >> "$GITHUB_ENV"
+
+      - name: Create incremental deployment plan
+        run: |
+          node scripts/create-ftp-deploy-plan.mjs "$DEPLOY_BASE" "$GITHUB_SHA" > "$RUNNER_TEMP/deploy-plan.lftp"
+          cat "$RUNNER_TEMP/deploy-plan.lftp"
+
+      - name: Upload changed dist files to hoster.by
         env:
           FTP_HOST: 87.232.64.171
           FTP_USER: github-deploy
           FTP_PASSWORD: ${{ secrets.HOSTER_FTP_PASSWORD }}
         run: |
           test -n "$FTP_PASSWORD"
+          printf '%s\n' "$GITHUB_SHA" > "$RUNNER_TEMP/current-deploy-sha"
           lftp <<EOF
           set cmd:fail-exit yes
           set net:max-retries 2
           set net:timeout 20
           set ftp:ssl-allow no
           open --user "$FTP_USER" --password "$FTP_PASSWORD" "ftp://$FTP_HOST"
-          put -O / dist/index.html
-          mkdir -p /design
-          mkdir -p /training
-          mkdir -p /bar-setup
-          put -O /design dist/design/index.html
-          put -O /training dist/training/index.html
-          put -O /bar-setup dist/bar-setup/index.html
-          mirror --reverse --verbose --parallel=4 dist/ /
+          source "$RUNNER_TEMP/deploy-plan.lftp"
+          put -O / "$RUNNER_TEMP/current-deploy-sha"
+          mv /current-deploy-sha /.deploy-sha
           cls -l /index.html
           cls -l /design/index.html
           cls -l /bar-setup/index.html
