@@ -55,6 +55,11 @@ jobs:
           set net:timeout 20
           set ftp:ssl-allow no
           open --user "$FTP_USER" --password "$FTP_PASSWORD" "ftp://$FTP_HOST"
+          mput -O / dist/*.html
           mirror --reverse --verbose --parallel=4 dist/ /
+          cls -l /index.html
+          cls -l /design.html
+          cls -l /bar-setup.html
+          cls -l /training.html
           bye
           EOF
