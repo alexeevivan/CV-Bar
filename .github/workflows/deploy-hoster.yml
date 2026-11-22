@@ -49,7 +49,6 @@ jobs:
           FTP_HOST: 87.232.64.171
           FTP_USER: github-deploy
           FTP_PASSWORD: ${{ secrets.HOSTER_FTP_PASSWORD }}
-          EVENT_BEFORE: ${{ github.event.before }}
         run: |
           test -n "$FTP_PASSWORD"
           rm -f "$RUNNER_TEMP/deploy-sha"
@@ -71,10 +70,15 @@ jobs:
             fi
           fi
 
-          if test -z "$DEPLOY_BASE" && test -n "$EVENT_BEFORE" && test "$EVENT_BEFORE" != "0000000000000000000000000000000000000000"; then
-            if git cat-file -e "$EVENT_BEFORE^{commit}" 2>/dev/null && git merge-base --is-ancestor "$EVENT_BEFORE" "$GITHUB_SHA"; then
-              DEPLOY_BASE="$EVENT_BEFORE"
+          if test -n "$DEPLOY_BASE"; then
+            if ! git diff --quiet "$DEPLOY_BASE" "$GITHUB_SHA" -- \
+              .github/workflows/deploy-hoster.yml \
+              scripts/create-ftp-deploy-plan.mjs; then
+              echo "Deployment logic changed; scheduling a full deployment."
+              DEPLOY_BASE=""
             fi
+          else
+            echo "No verified server deployment marker; scheduling a full deployment."
           fi
 
           echo "DEPLOY_BASE=$DEPLOY_BASE" >> "$GITHUB_ENV"
