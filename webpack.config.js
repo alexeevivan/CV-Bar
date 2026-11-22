@@ -1,5 +1,6 @@
 const path = require("path");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
+const CopyWebpackPlugin = require("copy-webpack-plugin");
 
 module.exports = {
 	mode: "development",
@@ -40,6 +41,16 @@ module.exports = {
 		],
 	},
 	plugins: [
+		new CopyWebpackPlugin({
+			patterns: [
+				{ from: "src/robots.txt", to: "robots.txt" },
+				{ from: "src/sitemap.xml", to: "sitemap.xml" },
+				{
+					from: "src/yandex_495d6f7f17902fa8.html",
+					to: "yandex_495d6f7f17902fa8.html",
+				},
+			],
+		}),
 		new HtmlWebpackPlugin({
 			filename: "index.html",
 			template: "./src/index.html",
