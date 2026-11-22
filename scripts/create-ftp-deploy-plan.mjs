@@ -64,7 +64,9 @@ for (const file of uploads) {
 	const remoteDirectory = `/${path.posix.dirname(relativePath)}`.replace("/.", "/");
 	if (remoteDirectory !== "/" && !directories.has(remoteDirectory)) {
 		directories.add(remoteDirectory);
-		commands.push(`mkdir -p ${quote(remoteDirectory)} || true`);
+		commands.push(
+			`mkdir -p ${quote(remoteDirectory)} || echo ${quote(`Directory already exists: ${remoteDirectory}`)}`,
+		);
 	}
 	commands.push(`put -O ${quote(remoteDirectory)} ${quote(file)}`);
 }
