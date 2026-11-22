@@ -63,6 +63,7 @@ jobs:
           EOF
 
           DEPLOY_BASE=""
+          FORCE_CORE_UPLOAD=""
           if test -s "$RUNNER_TEMP/deploy-sha"; then
             CANDIDATE="$(tr -d '[:space:]' < "$RUNNER_TEMP/deploy-sha")"
             if git cat-file -e "$CANDIDATE^{commit}" 2>/dev/null && git merge-base --is-ancestor "$CANDIDATE" "$GITHUB_SHA"; then
@@ -74,14 +75,15 @@ jobs:
             if ! git diff --quiet "$DEPLOY_BASE" "$GITHUB_SHA" -- \
               .github/workflows/deploy-hoster.yml \
               scripts/create-ftp-deploy-plan.mjs; then
-              echo "Deployment logic changed; scheduling a full deployment."
-              DEPLOY_BASE=""
+              echo "Deployment logic changed; scheduling a core-file recovery."
+              FORCE_CORE_UPLOAD="1"
             fi
           else
             echo "No verified server deployment marker; scheduling a full deployment."
           fi
 
           echo "DEPLOY_BASE=$DEPLOY_BASE" >> "$GITHUB_ENV"
+          echo "FORCE_CORE_UPLOAD=$FORCE_CORE_UPLOAD" >> "$GITHUB_ENV"
 
       - name: Create incremental deployment plan
         run: |

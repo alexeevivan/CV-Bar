@@ -38,7 +38,19 @@ function allFiles(directory, prefix = "dist") {
 	});
 }
 
-const uploads = baseCommit ? changedPaths("ACMRTUXB") : allFiles(distDirectory);
+const coreFiles = [
+	"dist/index.html",
+	"dist/design/index.html",
+	"dist/training/index.html",
+	"dist/bar-setup/index.html",
+	"dist/robots.txt",
+	"dist/sitemap.xml",
+	"dist/yandex_495d6f7f17902fa8.html",
+];
+const changedUploads = baseCommit ? changedPaths("ACMRTUXB") : allFiles(distDirectory);
+const uploads = process.env.FORCE_CORE_UPLOAD === "1"
+	? [...new Set([...changedUploads, ...coreFiles])]
+	: changedUploads;
 const deletions = baseCommit ? changedPaths("D") : [];
 const directories = new Set();
 const commands = [];
