@@ -5,7 +5,7 @@
 body {
 	font-family: "SF Pro Display";
 	color: var(--color-text);
-	background-color: #000000;
+	background-color: var(--main-color);
 	overflow-x: hidden;
 
 	.wrapper,
@@ -42,12 +42,13 @@ body {
 					text-align: center;
 					justify-content: center;
 					width: 100%;
-					font-family: "Optima", sans-serif;
+					font-family: "Montserrat", sans-serif;
+					font-weight: 200;
 
 					h2 {
 						text-transform: uppercase;
 						text-align: center;
-						font-size: calc(var(--index) * 1.1);
+						font-size: calc(var(--index) * .9);
 						color: var(--moccha);
 
 						span {
@@ -92,7 +93,7 @@ body {
 
 				&.info {
 					max-height: 100vh;
-					background: black;
+					padding: 0 50px;
 
 					.cloneable {
 						padding: var(--container-padding);
@@ -123,13 +124,13 @@ body {
 									margin-right: 0;
 									padding-top: 1em;
 									padding-bottom: 2em;
+									max-width: 100%;
+									padding: 0 0 0 10%;
 
 									.tab-container {
-										grid-column-gap: 3em;
-										grid-row-gap: 3em;
 										flex-flow: column;
-										justify-content: space-evenly;
-										align-items: flex-start;
+										justify-content: center;
+										align-items: baseline;
 										min-height: 100%;
 										padding-top: 0;
 										padding-bottom: 0;
@@ -144,22 +145,30 @@ body {
 											justify-content: flex-start;
 											align-items: flex-start;
 											display: flex;
-											height: 50%;
+											height: 40%;
+											width: 100%;
 
 											.tab-layout-heading {
 												margin-top: 0;
 												margin-bottom: 0;
-												font-size: calc(var(--index) * 2.5);
+												font-size: calc(var(--index) * 2);
 												font-weight: 500;
-												line-height: 1;
+												line-height: 1.25;
+												font-family: "Montserrat";
+												font-weight: 200;
+												color: var(--dark-color);
 											}
 
 											.filter-bar {
-												background-color: #ffaa000f;
-												border: 1px solid #efeeec14;
+												background-color: transparent;
+												border: 1px solid var(--moccha);
 												border-radius: .5em;
 												padding: .5em;
 												display: flex;
+												width: 100%;
+												flex-direction: row;
+												justify-content: space-between;
+												align-items: center;
 
 												.filter-button {
 													background-color: #0000;
@@ -169,28 +178,38 @@ body {
 													position: relative;
 
 													&.active {
-														border-color: var(--moccha);
+														border-color: var(--dark-color);
+														background-color: var(--dark-color);
 														border-radius: .25em;
+
+														.filter-button__p {
+															color: var(--main-color);
+															transition: 1s ease;
+														}
+													}
+
+													&:hover {
+														.filter-button__p {
+															color: var(--moccha);
+															transition: 1s ease;
+														}
 													}
 
 													.filter-button__p {
 														z-index: 1;
-														font-size: 1.125em;
+														font-size: 1em;
 														position: relative;
-														color: var(--main-color);
+														color: var(--dark-color);
+														font-family: "Montserrat", sans-serif;
 													}
 												}
 											}
 										}
 
 										.tab-container-bottom {
-											grid-column-gap: 2em;
-											grid-row-gap: 2em;
-											flex-flow: column;
-											justify-content: flex-start;
-											align-items: flex-start;
-											display: flex;
-											height: 50%;
+											height: 60%;
+											width: 100%;
+
 
 											.tab-content-wrap {
 												width: 100%;
@@ -200,20 +219,20 @@ body {
 
 												.tab-content-item {
 													z-index: 1;
-													grid-column-gap: 1.25em;
-													grid-row-gap: 1.25em;
 													visibility: hidden;
-													flex-flow: column;
 													display: flex;
 													position: absolute;
 													inset: auto 0% 0%;
 													height: 100%;
+													flex-flow: column;
 
 													&.active {
 														visibility: visible;
 														height: 100%;
 
 														ul {
+															font-family: "Montserrat", sans-serif;
+
 															li {
 																list-style: disc;
 															}
@@ -224,14 +243,27 @@ body {
 														letter-spacing: -.02em;
 														margin-top: 0;
 														margin-bottom: 0;
-														font-size: calc(var(--index) * 1.25);
+														font-size: calc(var(--index) * 1.5);
 														line-height: 1;
+														font-family: "Haydenz", sans-serif;
+														font-style: normal;
+														height: 25%;
+														display: flex;
+														justify-content: center;
+														align-items: center;
+														color: var(--dark-color);
+
 													}
 
 													.content-p {
 														margin: 0;
+														height: 65%;
 
 														ul {
+															font-family: "Montserrat", sans-serif;
+															color: #9fa3a7;
+															font-weight: 200;
+
 															li {
 																font-size: calc(var(--index) * .65);
 																margin: 0 0 5px 0;
@@ -244,6 +276,8 @@ body {
 													}
 
 													a {
+														display: inline-flex;
+														height: 10%;
 														transition: .3s;
 														color: var(--moccha);
 														justify-content: center;
@@ -255,6 +289,9 @@ body {
 														text-decoration: none;
 														display: flex;
 														position: relative;
+														border: 1px solid var(--moccha);
+														border-radius: 0.5em;
+														font-family: "Montserrat", sans-serif;
 
 														span {
 															margin: 0;
@@ -267,7 +304,7 @@ body {
 														.link-bg {
 															transition: .3s;
 															z-index: -1;
-															background-color: #efeeec;
+															background-color: var(--main-color);
 															border-radius: 0.25em;
 															position: absolute;
 															inset: 0%;
@@ -323,8 +360,8 @@ body {
 
 					.tab-button__bg {
 						z-index: 0;
-						background-color: var(--moccha);
-						border: 1px var(--moccha);
+						background-color: var(--dark-color);
+						border: 1px var(--dark-color);
 						border-radius: .25em;
 						width: 100%;
 						height: 100%;
