@@ -45,6 +45,8 @@ module.exports = {
 			patterns: [
 				{ from: "src/robots.txt", to: "robots.txt" },
 				{ from: "src/sitemap.xml", to: "sitemap.xml" },
+				{ from: "src/icon.png", to: "icon.png" },
+				{ from: "src/apple-touch-icon.png", to: "apple-touch-icon.png" },
 				{
 					from: "src/yandex_495d6f7f17902fa8.html",
 					to: "yandex_495d6f7f17902fa8.html",
